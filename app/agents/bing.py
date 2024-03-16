@@ -1,4 +1,4 @@
-from app.env.connect import Connector
+from app.envs.connector import Connector
 connector = Connector()
 kernel = connector.connect_azure_sk_embedding()
 
