@@ -12,9 +12,13 @@ class Connector:
     def connect_azure_sk(self):
         kernel = sk.Kernel()
         deployment, api_key, endpoint = sk.azure_openai_settings_from_dot_env()
-        service_id = "default"
-        kernel.add_service(
-            AzureChatCompletion(service_id=service_id, deployment_name=deployment, endpoint=endpoint, api_key=api_key),
+        kernel.add_chat_service(
+            "chat-completion", 
+            AzureChatCompletion(deployment_name=deployment, endpoint=endpoint, api_key=api_key)
+        )
+        kernel.add_text_embedding_generation_service(
+            "chat-embedding", 
+            AzureTextEmbedding(deployment_name="text-embedding-ada-002", endpoint=endpoint, api_key=api_key)
         )
         
         return kernel

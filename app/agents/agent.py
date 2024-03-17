@@ -1,19 +1,20 @@
-from app.envs.connector import Connector
-connector = Connector()
-kernel = connector.connect_azure_sk()
 
 import os
-from pathlib import Path
+import autogen
+from autogen import AssistantAgent, UserProxyAgent, config_list_from_json
 
-llm_config = {
-    "type": "azure",
-    "azure_deployment": os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
-    "azure_api_key": os.getenv("AZURE_OPENAI_API_KEY"),
-    "azure_endpoint": os.getenv("AZURE_OPENAI_ENDPOINT"),
-}
 
-work_dir = Path("coding")
-work_dir.mkdir(exist_ok=True)
+config_list = autogen.config_list_from_json(
+    env_or_file="OAI_CONFIG_LIST",
+    filter_dict={
+        "model": {
+            "gpt-4"
+        },
+    }
+)
+
+
+assistant = AssistantAgent("assistant", llm_config={"config_list": config_list})
 
 class Agent:
     def __init__(self, request, context=""):
