@@ -1,6 +1,6 @@
 from app.envs.connector import Connector
 connector = Connector()
-kernel = connector.connect_azure_sk_embedding()
+kernel = connector.connect_azure_sk()
 
 import os
 from collections import defaultdict
