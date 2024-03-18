@@ -1,6 +1,6 @@
 [
     {
-        "model": "gpt-4",
+        "model": "gpt-35-turbo-16k",
         "api_key": "faa75e8c8ee2436d8e45eae8c13b0c17",
         "base_url": "https://bpai-dev3.openai.azure.com/",
         "api_type": "azure",

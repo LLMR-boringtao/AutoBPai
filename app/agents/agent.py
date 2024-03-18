@@ -2,19 +2,25 @@
 import os
 import autogen
 from autogen import AssistantAgent, UserProxyAgent, config_list_from_json
+from autogen import ConversableAgent
 
 
-config_list = autogen.config_list_from_json(
-    env_or_file="OAI_CONFIG_LIST",
-    filter_dict={
-        "model": {
-            "gpt-4"
-        },
-    }
+config_list = autogen.config_list_from_json(env_or_file="OAI_CONFIG_LIST")
+
+agent_accountant = ConversableAgent(
+    "accountant",
+    system_message="你是一个会计。你对开票操作系统没有了解。",
+    llm_config={"config_list": config_list},
+    human_input_mode="NEVER"
 )
 
+agent_engineer = ConversableAgent(
+    "engineer",
+    system_message="你是一个工程师。你对开票操作系统非常了解。",
+    llm_config={"config_list": config_list},
+    human_input_mode="NEVER"
+)
 
-assistant = AssistantAgent("assistant", llm_config={"config_list": config_list})
 
 class Agent:
     def __init__(self, request, context=""):
@@ -32,5 +38,6 @@ class Agent:
 
     def actor(self):
         query = self.perceiver()
+        result = agent_accountant.initiate_chat(agent_engineer, message=query, max_turns=2)
 
-        return query
+        return result

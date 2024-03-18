@@ -5,7 +5,6 @@ from pytest import mark
 from app.agents.bing import BingAgent as Agent
 
 
-@mark.agent
 @mark.bing
 class BingAgentTests:
     def test_bing_agent_behaviours(self):
