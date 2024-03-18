@@ -38,6 +38,6 @@ class Agent:
 
     def actor(self):
         query = self.perceiver()
-        result = agent_accountant.initiate_chat(agent_engineer, message=query, max_turns=2)
+        result = agent_accountant.initiate_chat(agent_engineer, message=query, max_turns=1)
 
         return result
