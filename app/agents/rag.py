@@ -12,6 +12,7 @@ from autogen import config_list_from_json
 config_list = autogen.config_list_from_json(env_or_file="OAI_CONFIG_LIST")
 print(TEXT_FORMATS)
 
+
 class RAGAgent:
     def __init__(self, request, context=""):
         self.request = request
@@ -58,6 +59,9 @@ class RAGAgent:
 
         self.assistant.reset()
         qa_problem = query
-        self.ragproxyagent.initiate_chat(
+        chat_res = self.ragproxyagent.initiate_chat(
             self.assistant, message=self.ragproxyagent.message_generator, problem=qa_problem, search_string="增值税税率"
         )
+
+        print(chat_res.summary)
+        return chat_res
