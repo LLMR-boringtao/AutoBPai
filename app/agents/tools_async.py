@@ -30,12 +30,14 @@ user_proxy = autogen.UserProxyAgent(
     max_consecutive_auto_reply = 2,
     is_termination_msg=lambda x: x.get("content", "") and x.get("content", "").rstrip().endswith("TERMINATE"),
     code_execution_config = {
-        "work_dir": "app/tools",
+        "work_dir": "app/code",
         "use_docker": False,
     },
 )
 
-def timer(num_seconds: Annotated[str, "Number of seconds in the timer."]) -> str:
+@user_proxy.register_for_execution()
+@assistant.register_for_llm(description="create a timer for N seconds")
+async def timer(num_seconds: Annotated[str, "Number of seconds in the timer."]) -> str:
     for i in range(int(num_seconds)):
         time.sleep(1)
     return "Timer is done!"
@@ -44,17 +46,6 @@ autogen.agentchat.register_function(
     caller=assistant,
     executor=user_proxy,
     description="create a timer for N seconds",
-)
-
-def stopwatch(num_seconds: Annotated[str, "Number of seconds in the stopwatch."]) -> str:
-    for i in range(int(num_seconds)):
-        time.sleep(1)
-    return "Stopwatch is done!"
-autogen.agentchat.register_function(
-    stopwatch,
-    caller=assistant,
-    executor=user_proxy,
-    description="create a stopwatch for N seconds",
 )
 
 
@@ -72,14 +63,16 @@ class ToolsAgent:
     def planner(self):
         pass
     
-    def actor(self):
+    async def actor(self):
         query = self.perceiver()
 
-        result = None
-        chat_res = user_proxy.initiate_chat(
-            assistant,
-            message=query,
-        )
+        result = ""
+        with Cache.disk() as cache:
+            chat_res = await user_proxy.a_initiate_chat(
+                assistant,
+                message=query,
+                cache=cache,
+            )
+        result = chat_res.chat_history[-1]['content']    
 
-        result = chat_res.chat_history[-1]['content']
         return result
