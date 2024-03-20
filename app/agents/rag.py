@@ -10,7 +10,6 @@ from autogen.retrieve_utils import TEXT_FORMATS
 
 from autogen import config_list_from_json
 config_list = autogen.config_list_from_json(env_or_file="OAI_CONFIG_LIST")
-print(TEXT_FORMATS)
 
 
 class RAGAgent:
